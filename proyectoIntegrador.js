@@ -87,16 +87,65 @@ function contarTareasCompletadas(numCategoria){
     console.log("Tareas completadas de la categoria " + numCategoria + ": " + tareasCompletadas + " de " + tareasEnTotal + " tareas!")
 }
 
-// funcion que muestra todas las tareas no completadas
 function mostrarTareasNoComp(){
-    console.log("Tareas no completadas: ")
+    console.log("Tareas no completadas: ");
     tareas.forEach(function(tarea){
         if(!tarea.completada){
-            console.log(" - Nombre: " + tarea.nombre + ", Categoria: " + categoriasNombres[tarea.categoria])
+            let fechaLimiteMostrar = tarea.fechaLimite ? tarea.fechaLimite : "Sin fecha límite";
+            console.log(" - Nombre: " + tarea.nombre + ", Fecha Límite: " + fechaLimiteMostrar + ", Categoría: " + categoriasNombres[tarea.categoria]);
         }
-    })
+    });
 }
 
+// Función para ordenar tareas por la propiedad 'nombre' con BubbleSort
+function ordenarTareasXNombre(){
+    let total = tareas.length;
+
+    for(let j = 0; j < total; j++){
+        for(let i = 0; i < total - 1; i++){ // Cambiado a total - 1
+            if(tareas[i].nombre > tareas[i+1].nombre){
+                let temp = tareas[i];
+                tareas[i] = tareas[i+1];
+                tareas[i+1] = temp;
+            }
+        }
+    }
+}
+
+// Función para ordenar tareas por la propiedad 'fechaLimite' con BubbleSort
+function ordenarTareasXFechaLimite(){
+    let total = tareas.length;
+
+    for(let j = 0; j < total; j++){
+        for(let i = 0; i < total - 1; i++){ // Cambiado a total - 1
+            if(tareas[i].fechaLimite > tareas[i+1].fechaLimite){
+                let temp = tareas[i];
+                tareas[i] = tareas[i+1];
+                tareas[i+1] = temp;
+            }
+        }
+    }
+}
+
+// Funcion que busca una tarea por nombre y retorna su posicion
+function buscarTareaXNombre(nombreTarea) {
+    let inicio = 0;
+    let fin = tareas.length - 1;
+
+    while (inicio <= fin) {
+        let posElementoMedio = Math.floor((inicio + fin) / 2);
+
+        if (tareas[posElementoMedio].nombre === nombreTarea) {
+            return posElementoMedio;
+        } else if (tareas[posElementoMedio].nombre < nombreTarea) {
+            inicio = posElementoMedio + 1;
+        } else {
+            fin = posElementoMedio - 1;
+        }
+    }
+
+    return -1;
+}
 
 // Función para mostrar menú de opciones
 function Menu() {
@@ -111,6 +160,9 @@ function Menu() {
     console.log('8. Filtrar Categorias')
     console.log('9. Visualizar cantidad de tareas completadas por categoria')
     console.log('10. Visualizar cantidad de tareas no completadas')
+    console.log('11. Ordenar las tareas alfabeticamente')
+    console.log('12. Ordenar las tareas por fecha limite')
+    console.log('13. Buscar una tarea por su nombre')
     console.log("0. Salir");
 }
 
@@ -196,6 +248,27 @@ function InteractuarconUsuario() {
                 break
             case 10:
                 mostrarTareasNoComp()
+                break
+            case 11:
+                ordenarTareasXNombre()
+                console.log("---Tareas por Nombre---")
+                console.log(tareas)
+                break
+            case 12:
+                ordenarTareasXFechaLimite()
+                console.log("---Tareas por Fecha---")
+                console.log(tareas)
+                break
+            case 13:
+                ordenarTareasXNombre()
+                let nombreAbuscar = prompt("Ingrese el nombre de la tarea a buscar: ")
+                let indicetarea = buscarTareaXNombre(nombreAbuscar)
+                
+                if(indicetarea !== -1){
+                    console.log('Tarea encontrada en el indice: ' + indicetarea)
+                } else {
+                    console.log("Tarea no encontrada")
+                }
                 break
             case 0:
                 console.log("Saliendo del programa...");
